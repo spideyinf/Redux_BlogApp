@@ -1,17 +1,23 @@
 import React, { Component } from 'react'
 import { Field, reduxForm } from 'redux-form'
+import { Link } from 'react-router-dom'
 
 class PostsNew extends Component {
   renderField(field) {
+    const { meta: { touched, error }, input, label } = field
+    const className = `form-group ${touched && error ? 'has-danger' : '' }`
+
     return (
-      <div className="form-group">
-        <label>{field.label}</label>
+      <div className={className}>
+        <label>{label}</label>
         <input
           className="form-control"
           type="text"
-          {...field.input}
+          {...input}
         />
-        {field.meta.error}
+        <div className="text-help">
+          {touched ? error : ''}
+        </div>
       </div>
     )
   }
@@ -43,6 +49,9 @@ class PostsNew extends Component {
         <button className="btn btn-primary" type="submit">
           Submit
         </button>
+        <Link to="/" className="btn btn-danger ml-2">
+          Cancel
+        </Link>
       </form>
     )
   }
@@ -62,6 +71,8 @@ function validate(form) {
   if (!form.content) {
     errors.content = 'Please insert some content'
   }
+
+  return errors
 }
 
 export default reduxForm({
