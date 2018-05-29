@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { fetchPost } from '../actions'
+import { Link } from 'react-router-dom'
 
 class PostsShow extends Component {
   componentDidMount() {
@@ -9,24 +10,28 @@ class PostsShow extends Component {
   }
 
   render() {
-    const { post } = this.props
+    const { id } = this.props.match.params
+    const activePost = this.props.posts[id]
 
-    if (!post) {
+    if (!activePost) {
       return <div>Loading...</div>
     }
 
     return (
       <div>
-        <h3>{post.title}</h3>
-        <h6>Categories: {post.categories}</h6>
-        <p>{post.content}</p>
+        <Link to="/" className="btn btn-primary">
+          Back to Home
+        </Link>
+        <h3>{activePost.title}</h3>
+        <h6>Categories: {activePost.categories}</h6>
+        <p>{activePost.content}</p>
       </div>
     )
   }
 }
 
-function mapStateToProps({ posts }, ownProps) {
-  return { post: posts[ownProps.match.params.id] }
+function mapStateToProps(state) {
+  return { posts: state.posts }
 }
 
 export default connect(mapStateToProps, { fetchPost })(PostsShow)
